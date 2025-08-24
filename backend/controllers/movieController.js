@@ -4,7 +4,10 @@ exports.getMovies = async (req, res) => {
     try {
         const query = {};
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0); // Start of today
+
+        // This formats today's date as "YYYY-MM-DD" for comparison
+        const todayString = today.toISOString().split('T')[0];
 
         if (req.query.city) {
             query.cities = req.query.city;
@@ -13,26 +16,26 @@ exports.getMovies = async (req, res) => {
             query.genre = req.query.genre;
         }
 
-        // CORRECTED LOGIC: Only filter by date if a 'status' is provided
-        if (req.query.status) {
-            if (req.query.status === 'coming_soon') {
-                query.releaseDate = { $gt: today }; // Movies with release date after today
-            } else {
-                // Default to "Now Showing" if status is present
-                query.releaseDate = { $lte: today }; // Movies with release date of today or earlier
-            }
+        // --- CORRECTED LOGIC ---
+        if (req.query.status === 'coming_soon') {
+            // "Coming Soon" are movies whose release date is in the future AND have no showtimes yet.
+            query.releaseDate = { $gt: today };
+        } else if (req.query.status === 'now_showing') {
+            // "Now Showing" are movies that have at least one showtime on or after today.
+            query['showtimes.date'] = { $gte: todayString };
         }
-        // If no 'status' is provided (like from the Admin Panel), this block is skipped,
-        // and all movies are fetched.
-
-        const movies = await Movie.find(query);
+        // If no status is sent (like for the "All Movies" tab or Admin Panel), it won't filter by date.
+        
+        const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+        
+        const movies = await Movie.find(query).limit(limit);
         res.json(movies);
     } catch (error) {
         res.status(500).json({ message: "Server Error" });
     }
 };
 
-// --- All other functions remain the same ---
+// --- All other functions (getMovieById, addMovie, etc.) remain the same ---
 
 exports.getMovieById = async (req, res) => {
     try {
@@ -59,7 +62,7 @@ exports.addMovie = async (req, res) => {
 };
 
 exports.updateMovie = async (req, res) => {
-    const { title, description, genre, rating, image, cities, releaseDate } = req.body;
+    const { title, description, genre, rating, image, cities, releaseDate } = req.body; 
     try {
         const movie = await Movie.findById(req.params.id);
         if(movie) {
@@ -70,6 +73,7 @@ exports.updateMovie = async (req, res) => {
             movie.image = image || movie.image;
             movie.cities = cities || movie.cities;
             movie.releaseDate = releaseDate || movie.releaseDate;
+            
             const updatedMovie = await movie.save();
             res.json(updatedMovie);
         } else res.status(404).json({ message: 'Movie not found' });
