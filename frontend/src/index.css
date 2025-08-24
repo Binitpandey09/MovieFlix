@@ -1,0 +1,28 @@
+/* Global Styles */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.see-all-link {
+  color: #ef4f58;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.see-all-link:hover {
+  text-decoration: underline;
+}
+
+.section-spacing {
+  margin-top: 2.5rem;
+}

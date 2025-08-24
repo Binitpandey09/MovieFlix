@@ -1,0 +1,22 @@
+.booking-page-container {
+    padding-top: 2rem;
+}
+.movie-title-booking {
+    margin-bottom: 1.5rem;
+}
+.showtime-selector {
+    margin-bottom: 2rem;
+}
+.booking-summary {
+    position: sticky;
+    top: 20px;
+}
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+.summary-item.total {
+    font-weight: bold;
+    font-size: 1.2rem;
+}

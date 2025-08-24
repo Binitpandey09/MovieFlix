@@ -1,0 +1,19 @@
+.custom-header {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.custom-header .navbar-brand {
+    font-weight: bold;
+}
+.custom-header .signin-button .nav-link {
+    background-color: #dc3545;
+    color: #ffffff !important;
+    padding: 0.35rem 0.75rem;
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in-out;
+}
+.custom-header .signin-button .nav-link:hover {
+    background-color: #c82333;
+}

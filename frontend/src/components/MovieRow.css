@@ -1,0 +1,30 @@
+.movie-row-container {
+    margin-bottom: 2.5rem;
+}
+
+.movie-row-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Add padding to the slides for spacing */
+.movie-row-slide {
+    padding: 0 10px;
+}
+
+/* Override default slick arrow styles to make them more visible */
+.movie-row-container .slick-prev,
+.movie-row-container .slick-next {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+}
+
+.movie-row-container .slick-prev:before,
+.movie-row-container .slick-next:before {
+    color: white;
+}

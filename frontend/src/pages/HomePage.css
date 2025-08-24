@@ -1,0 +1,35 @@
+.tabs-wrapper {
+    background-color: #f2f2f2;
+    padding: 0.09rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.movie-tabs-nav {
+    border-bottom: none;
+}
+.movie-tabs-nav .nav-link {
+    border: none;
+    color: #333;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    position: relative;
+    background-color: transparent !important;
+}
+.movie-tabs-nav .nav-link.active {
+    color: #333 !important;
+    font-weight: 700;
+}
+.movie-tabs-nav .nav-link.active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 4px;
+    background-color: #f5c518;
+    border-radius: 2px;
+}
+.movie-tabs-nav .nav-link:focus {
+    outline: none;
+    box-shadow: none;
+}

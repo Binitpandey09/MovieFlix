@@ -1,0 +1,61 @@
+.movie-details-wrapper {
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+.movie-details-overlay {
+    background: linear-gradient(90deg, #1a1a1a 20%, rgba(26, 26, 26, 0.8) 50%, rgba(26, 26, 26, 0.6) 100%);
+    padding: 4rem 0;
+}
+.movie-details-content {
+    align-items: center;
+}
+.movie-poster {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.details-container {
+    padding-left: 2rem;
+}
+.movie-title {
+    font-size: 3rem;
+    font-weight: 700;
+}
+.rating-box {
+    background-color: #333;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+.tags-box {
+    margin-top: 1rem;
+}
+.tags-box .tag {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+.movie-meta {
+    margin-top: 1rem;
+    color: #ccc;
+}
+.book-tickets-btn {
+    margin-top: 2rem;
+    background-color: #f84464;
+    border-color: #f84464;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}/* Add this to the end of MovieDetailsPage.css */
+
+.movie-description {
+    margin-top: 1.5rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+    max-width: 80%; /* Prevents text from stretching too wide */
+}
