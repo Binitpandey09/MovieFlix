@@ -1,62 +1,11 @@
-// Original One
-
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const cors = require('cors');
-// const dotenv = require('dotenv');
-
-// dotenv.config();
-
-
-// dotenv.config();
-
-// // Route imports
-// const authRoutes = require('./routes/authRoutes');
-// const movieRoutes = require('./routes/movieRoutes');
-// const bookingRoutes = require('./routes/bookingRoutes');
-// const cityRoutes = require('./routes/cityRoutes');
-// const bannerRoutes = require('./routes/bannerRoutes');
-// const contactRoutes = require('./routes/contactRoutes');
-// const categoryRoutes = require('./routes/categoryRoutes');
-
-
-// const app = express();
-
-// // Middleware
-// app.use(cors());
-// app.use(express.json());
-
-// // API Routes
-// app.use('/api/auth', authRoutes);
-// app.use('/api/movies', movieRoutes);
-// app.use('/api/bookings', bookingRoutes);
-// app.use('/api/cities', cityRoutes);
-// app.use('/api/banners', bannerRoutes);
-// app.use('/api/contact', contactRoutes);
-// app.use('/api/categories', categoryRoutes);
-
-// // Database Connection
-// mongoose.connect(process.env.MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-// .then(() => console.log("✅ MongoDB Atlas connected"))
-// .catch(err => console.error("❌ MongoDB connection error:", err));
-
-// // Start Server
-// const PORT = process.env.PORT || 5001;
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// });
-
-// module.exports = app;
-
-// New one
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+
+dotenv.config();
+
 
 dotenv.config();
 
@@ -69,16 +18,14 @@ const bannerRoutes = require('./routes/bannerRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 
+
 const app = express();
 
-// ✅ Middleware
+// Middleware
+app.use(cors());
 app.use(express.json());
-app.use(cors({
-  origin: [process.env.FRONTEND_URL, "http://localhost:3000", "http://localhost:5173"],
-  credentials: true
-}));
 
-// ✅ API Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -87,7 +34,7 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/categories', categoryRoutes);
 
-// ✅ Database Connection
+// Database Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -95,12 +42,11 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("✅ MongoDB Atlas connected"))
 .catch(err => console.error("❌ MongoDB connection error:", err));
 
-// ✅ Export for Vercel / Run locally
-if (process.env.VERCEL) {
-  module.exports = app;
-} else {
-  const PORT = process.env.PORT || 5001;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-  });
-}
+// Start Server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
+
