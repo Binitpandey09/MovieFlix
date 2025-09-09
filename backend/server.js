@@ -72,11 +72,27 @@ const app = express();
 
 // --- Middleware ---
 
-// CORS configuration updated with your NEWEST Vercel URL ✅
+// List of all your Vercel deployment URLs that should be allowed.
+const allowedOrigins = [
+  'https://movieflix-frontend-ten.vercel.app',
+  'https://movieflix-frontend-5krgW3nk-binitpandey09s-projects.vercel.app',
+  'https://movieflix-frontend-hgekehzi1-binitpandey09s-projects.vercel.app',
+  'https://movieflix-frontend-r9w2e30n-binitpandey09s-projects.vercel.app' // This is your latest one
+];
+
 const corsOptions = {
-  origin: 'https://movieflix-frontend-hgekehzi1-binitpandey09s-projects.vercel.app',
+  origin: function (origin, callback) {
+    // Check if the incoming origin is in our list of allowed origins
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   optionsSuccessStatus: 200
 };
+
+// Use the new CORS options ✅
 app.use(cors(corsOptions));
 
 // Middleware to parse JSON bodies
