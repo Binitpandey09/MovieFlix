@@ -19,8 +19,8 @@ const HomePage = ({ city, category }) => {
                 // Otherwise, it sends the key ('now_showing' or 'coming_soon') as the status.
                 const statusQuery = activeTabKey === 'all_movies' ? '' : `&status=${activeTabKey}`;
                 
-                const { data } = await axios.get(`/api/movies?city=${city}&genre=${category}${statusQuery}&limit=12`);
-                setMovies(data);
+                const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/movies?city=${city}&genre=${category}${statusQuery}&limit=12`);
+                setMovies(data && Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error("Failed to fetch movies:", error);
                 setMovies([]);
@@ -69,7 +69,7 @@ const HomePage = ({ city, category }) => {
                 </div>
                 
                 <Row>
-                    {movies.length > 0 ? (
+                    {movies && movies.length > 0 ? (
                         movies.map((movie) => (
                             <Col key={movie._id} sm={12} md={6} lg={4} xl={3}>
                                 <MovieCard movie={movie} />

@@ -71,9 +71,9 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: [
-    'http://localhost:3000', // for local development
-    'https://your-vercel-app-name.vercel.app', // replace with your actual Vercel URL
-    // Add your custom domain if you have one
+    'http://localhost:3000',
+    'https://movieflix-frontend-afk2d4qee-binitpandey09s-projects.vercel.app',
+    // Add any other Vercel URLs you get
   ],
   credentials: true
 }));
