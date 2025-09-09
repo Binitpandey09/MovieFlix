@@ -1,11 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-// 1. Import your new api instance INSTEAD of axios
-import api from '../api'; // Adjust path if api.js is in a different folder
+import api from '../api';
 import './MovieCarousel.css';
 
-// ... (Your NextArrow, PrevArrow, and CustomDots components remain unchanged) ...
+const NextArrow = (props) => {
+  const { onClick } = props;
+  return (
+    <div 
+      className="custom-arrow custom-next" 
+      onClick={onClick}
+      style={{ display: 'flex' }}
+    />
+  );
+}
+
+const PrevArrow = (props) => {
+  const { onClick } = props;
+  return (
+    <div 
+      className="custom-arrow custom-prev" 
+      onClick={onClick}
+      style={{ display: 'flex' }}
+    />
+  );
+}
+
+const CustomDots = ({ dots, currentSlide, goToSlide }) => {
+  return (
+    <div className="custom-dots-container">
+      {dots.map((dot, index) => (
+        <button
+          key={index}
+          className={`custom-dot ${index === currentSlide ? 'active' : ''}`}
+          onClick={() => goToSlide(index)}
+        />
+      ))}
+    </div>
+  );
+};
 
 const MovieCarousel = () => {
     const [banners, setBanners] = useState([]);
@@ -14,44 +47,86 @@ const MovieCarousel = () => {
     useEffect(() => {
         const fetchBanners = async () => {
             try {
-                // 2. Use `api.get` which already knows the backend URL
-                // The request will now correctly go to https://movieflix-sp5q.onrender.com/api/banners
-                const { data } = await api.get('/api/banners');
-                
-                // Now, `data` should be the actual JSON object from your API
-                // If the array is inside a key, you might need data.banners or data.data
-                if (Array.isArray(data)) {
-                    setBanners(data);
-                } else if (Array.isArray(data.banners)) { // Fallback for { banners: [...] }
-                    setBanners(data.banners);
-                }
-
+                const { data } = await api.get('/banners'); // Fixed: removed /api prefix
+                setBanners(data && Array.isArray(data) ? data : []); // Added safety check
             } catch (error) {
                 console.error("Failed to fetch banners:", error);
-                setBanners([]); // Set to empty array on error to prevent crashes
+                setBanners([]); // Set empty array on error
             }
         };
         fetchBanners();
     }, []);
 
-    // 3. (RECOMMENDED) Make your filter crash-proof
-    const filteredBanners = Array.isArray(banners) ? banners.filter(banner => banner.movie) : [];
-
     const sliderRef = React.useRef(null);
 
-    // ... (rest of your component code remains the same) ...
+    const goToSlide = (slideIndex) => {
+        if (sliderRef.current) {
+            sliderRef.current.slickGoTo(slideIndex);
+        }
+    };
+
+    // Improved filter with better safety checks
+    const filteredBanners = banners.filter(banner => 
+        banner && banner.movie && banner.movie._id && banner.bannerImage
+    );
 
     const settings = {
         dots: false,
         infinite: filteredBanners.length > 1,
         speed: 600,
         slidesToShow: 1,
-        // ... etc
+        slidesToScroll: 1,
+        arrows: true,
+        autoplay: filteredBanners.length > 1, // Only autoplay if multiple slides
+        autoplaySpeed: 5000,
+        pauseOnHover: true,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+        beforeChange: (oldIndex, newIndex) => {
+            setCurrentSlide(newIndex);
+        },
+        fade: true,
+        cssEase: 'cubic-bezier(0.4, 0, 0.2, 1)',
     };
 
     return (
         <div className="carousel-wrapper">
-           {/* ... (rest of your JSX remains the same) ... */}
+            {filteredBanners.length > 0 ? (
+                <>
+                    <Slider ref={sliderRef} {...settings}>
+                        {filteredBanners.map((banner) => (
+                            <div key={banner._id} className="carousel-slide">
+                                <Link to={`/movie/${banner.movie._id}`}>
+                                    <div className="image-container">
+                                        <img 
+                                            src={banner.bannerImage} 
+                                            alt={banner.movie.title || 'Movie Banner'} 
+                                            className="carousel-full-width-image"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none'; // Hide broken images
+                                            }}
+                                        />
+                                        <div className="image-overlay"></div>
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
+                    </Slider>
+                    {filteredBanners.length > 1 && (
+                        <CustomDots
+                            dots={filteredBanners}
+                            currentSlide={currentSlide}
+                            goToSlide={goToSlide}
+                        />
+                    )}
+                </>
+            ) : (
+                <div className="carousel-placeholder">
+                    <div className="placeholder-content">
+                        <div className="placeholder-shimmer"></div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

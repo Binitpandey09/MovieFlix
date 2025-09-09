@@ -21,7 +21,7 @@ const ShowtimeManagerModal = ({ show, handleClose, movie, refreshMovies }) => {
         try {
             const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
             // 2. Use 'api.post' which will correctly call your backend
-            const { data } = await api.post(`/api/movies/${movie._id}/showtimes`, { date, time }, config);
+            const { data } = await api.post(`/movies/${movie._id}/showtimes`, { date, time }, config);
             setLocalShowtimes(data.showtimes);
             setDate('');
             setTime('');

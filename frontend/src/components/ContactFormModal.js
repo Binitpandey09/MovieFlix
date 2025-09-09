@@ -13,7 +13,7 @@ const ContactFormModal = ({ show, handleClose }) => {
         e.preventDefault();
         try {
             // 2. Use 'api.post' which will correctly call your backend
-            const { data } = await api.post('/api/contact', { name, email, issue });
+            const { data } = await api.post('/contact', { name, email, issue });
             setMessage(data.message);
             setName('');
             setEmail('');

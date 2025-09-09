@@ -41,7 +41,7 @@ const EditMovieModal = ({ show, handleClose, movie, refreshMovies, cities }) => 
         try {
             const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
             // 2. Use 'api.put' and a simpler URL. The base URL is already included.
-            await api.put(`/api/movies/${movie._id}`, formData, config);
+            await api.put(`/movies/${movie._id}`, formData, config);
             refreshMovies();
             handleClose();
         } catch (error) {
