@@ -50,7 +50,6 @@
 
 // module.exports = app;
 
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -58,7 +57,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Route imports
+// --- Route Imports ---
 const authRoutes = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
@@ -73,41 +72,40 @@ const app = express();
 // --- Middleware ---
 
 // List of all your Vercel deployment URLs that should be allowed.
+// This allows your backend to accept requests from your frontend.
 const allowedOrigins = [
   'https://movieflix-frontend-ten.vercel.app',
   'https://movieflix-frontend-5krgW3nk-binitpandey09s-projects.vercel.app',
   'https://movieflix-frontend-hgekehzi1-binitpandey09s-projects.vercel.app',
-  'https://movieflix-frontend-r9w2e30n-binitpandey09s-projects.vercel.app' // This is your latest one
+  'https://movieflix-frontend-r9w2e30n-binitpandey09s-projects.vercel.app'
+  // Add any new Vercel URLs here in the future
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Check if the incoming origin is in our list of allowed origins
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Request from this origin is not allowed by CORS'));
     }
   },
   optionsSuccessStatus: 200
 };
-
-// Use the new CORS options ✅
 app.use(cors(corsOptions));
 
-// Middleware to parse JSON bodies
+// Middleware to parse JSON request bodies
 app.use(express.json());
 
 
 // --- API Routes ---
+// These are the only routes your server should have.
 
+// A simple health-check route to see if the API is running
 app.get('/', (req, res) => {
-  res.json({
-    message: "MovieFlix Backend API is running!",
-    status: "success"
-  });
+  res.json({ message: "MovieFlix Backend API is alive and running!" });
 });
 
+// All your application's API endpoints
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -122,7 +120,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("✅ MongoDB Atlas connected"))
+.then(() => console.log("✅ MongoDB Atlas connected successfully"))
 .catch(err => console.error("❌ MongoDB connection error:", err));
 
 
