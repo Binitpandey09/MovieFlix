@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-import api from '../api';
 import './MovieCarousel.css';
+import api from '../api';
 
 const NextArrow = (props) => {
   const { onClick } = props;
@@ -47,11 +47,10 @@ const MovieCarousel = () => {
     useEffect(() => {
         const fetchBanners = async () => {
             try {
-                const { data } = await api.get('/banners'); // Fixed: removed /api prefix
-                setBanners(data && Array.isArray(data) ? data : []); // Added safety check
+                const { data } = await api.get('/api/banners');
+                setBanners(data);
             } catch (error) {
                 console.error("Failed to fetch banners:", error);
-                setBanners([]); // Set empty array on error
             }
         };
         fetchBanners();
@@ -65,10 +64,7 @@ const MovieCarousel = () => {
         }
     };
 
-    // Improved filter with better safety checks
-    const filteredBanners = banners.filter(banner => 
-        banner && banner.movie && banner.movie._id && banner.bannerImage
-    );
+    const filteredBanners = banners.filter(banner => banner.movie);
 
     const settings = {
         dots: false,
@@ -76,8 +72,8 @@ const MovieCarousel = () => {
         speed: 600,
         slidesToShow: 1,
         slidesToScroll: 1,
-        arrows: true,
-        autoplay: filteredBanners.length > 1, // Only autoplay if multiple slides
+        arrows: true, // Enable arrows
+        autoplay: true,
         autoplaySpeed: 5000,
         pauseOnHover: true,
         nextArrow: <NextArrow />,
@@ -94,17 +90,14 @@ const MovieCarousel = () => {
             {filteredBanners.length > 0 ? (
                 <>
                     <Slider ref={sliderRef} {...settings}>
-                        {filteredBanners.map((banner) => (
+                        {filteredBanners.map((banner, index) => (
                             <div key={banner._id} className="carousel-slide">
                                 <Link to={`/movie/${banner.movie._id}`}>
                                     <div className="image-container">
                                         <img 
                                             src={banner.bannerImage} 
-                                            alt={banner.movie.title || 'Movie Banner'} 
-                                            className="carousel-full-width-image"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none'; // Hide broken images
-                                            }}
+                                            alt={banner.movie.title} 
+                                            className="carousel-full-width-image" 
                                         />
                                         <div className="image-overlay"></div>
                                     </div>

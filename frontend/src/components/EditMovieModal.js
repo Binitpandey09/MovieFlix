@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-// 1. Import your custom 'api' instance INSTEAD of 'axios'
-import api from '../api'; // Adjust path if api.js is in a different folder
+import api from '../api';
 
 // The modal now receives a 'cities' prop with the list from your database
 const EditMovieModal = ({ show, handleClose, movie, refreshMovies, cities }) => {
@@ -40,12 +39,10 @@ const EditMovieModal = ({ show, handleClose, movie, refreshMovies, cities }) => 
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         try {
             const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
-            // 2. Use 'api.put' and a simpler URL. The base URL is already included.
-            await api.put(`/movies/${movie._id}`, formData, config);
+            await api.put(`/api/movies/${movie._id}`, formData, config);
             refreshMovies();
             handleClose();
         } catch (error) {
-            console.error('Failed to update movie:', error); // Log the error for better debugging
             alert('Failed to update movie');
         }
     };
@@ -72,6 +69,7 @@ const EditMovieModal = ({ show, handleClose, movie, refreshMovies, cities }) => 
                         />
                     </Form.Group>
                     
+                    {/* The checkboxes are now generated from the dynamic 'cities' prop */}
                     <Form.Group controlId='cities' className='mt-3'>
                         <Form.Label>Cities</Form.Label>
                         {cities && cities.map(city => (

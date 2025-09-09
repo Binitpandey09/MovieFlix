@@ -21,21 +21,19 @@ function App() {
   const [category, setCategory] = useState('All');
   const [allCities, setAllCities] = useState([]);
   const [categories, setCategories] = useState([]); // State for all categories
-  
   const fetchAllCategories = async () => {
-    console.log('API URL:', process.env.REACT_APP_API_URL);
       try {
-          const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/categories`);
+          const { data } = await axios.get('/api/categories');
           setCategories(data.map(c => c.name));
       } catch (error) {
           console.error("Could not fetch categories", error);
       }
   };
-  
   useEffect(() => {
+    
     const fetchAllCities = async () => {
         try {
-            const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/cities`);
+            const { data } = await axios.get('/api/cities');
             const cityNames = data.map(c => c.name);
             setAllCities(cityNames);
             if (cityNames.length > 0 && !cityNames.includes(city)) {
@@ -45,7 +43,6 @@ function App() {
             console.error("Could not fetch cities", error);
         }
     };
-    
     fetchAllCities();
     fetchAllCategories();
   }, [city]);

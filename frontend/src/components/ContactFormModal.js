@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
-// 1. Import your custom 'api' instance INSTEAD of 'axios'
-import api from '../api'; // Adjust path if api.js is in a different folder
+import api from '../api';
 
 const ContactFormModal = ({ show, handleClose }) => {
     const [name, setName] = useState('');
@@ -12,8 +11,7 @@ const ContactFormModal = ({ show, handleClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // 2. Use 'api.post' which will correctly call your backend
-            const { data } = await api.post('/contact', { name, email, issue });
+            const { data } = await api.post('/api/contact', { name, email, issue });
             setMessage(data.message);
             setName('');
             setEmail('');
