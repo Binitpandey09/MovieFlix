@@ -73,9 +73,11 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://movieflix-frontend-afk2d4qee-binitpandey09s-projects.vercel.app',
-    // Add any other Vercel URLs you get
+    'https://movieflix-frontend-onuzi04fx-binitpandey09s-projects.vercel.app', // Add this new one too
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
