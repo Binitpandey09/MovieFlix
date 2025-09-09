@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import api from '../api';
+import api from './api';
 import Header from './components/Header';
 import FilterBar from './components/FilterBar';
 import Footer from './components/Footer'; // 1. Import the Footer
