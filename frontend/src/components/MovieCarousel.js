@@ -48,7 +48,10 @@ const MovieCarousel = () => {
         const fetchBanners = async () => {
             try {
                 const { data } = await axios.get('/api/banners');
-                setBanners(data);
+                // setBanners(data);
+                if (Array.isArray(data.banners)) {
+                setBanners(data.banners);
+            }
             } catch (error) {
                 console.error("Failed to fetch banners:", error);
             }
@@ -64,7 +67,7 @@ const MovieCarousel = () => {
         }
     };
 
-    const filteredBanners = banners.filter(banner => banner.movie);
+    const filteredBanners = Array.isArray(banners) ? banners.filter(banner => banner.movie) : [];
 
     const settings = {
         dots: false,

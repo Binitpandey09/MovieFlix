@@ -23,6 +23,7 @@ function App() {
   const [categories, setCategories] = useState([]); // State for all categories
   
   const fetchAllCategories = async () => {
+    console.log('API URL:', process.env.REACT_APP_API_URL);
       try {
           const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/categories`);
           setCategories(data.map(c => c.name));
