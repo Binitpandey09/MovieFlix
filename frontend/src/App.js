@@ -29,23 +29,46 @@ function App() {
           console.error("Could not fetch categories", error);
       }
   };
-  useEffect(() => {
-    
+    useEffect(() => {
+    const fetchAllCategories = async () => {
+      try {
+        const { data } = await api.get('/api/categories');
+        // ✅ CORRECTED: Check for the 'categories' array inside the data object
+        if (data && Array.isArray(data.categories)) { 
+          setCategories(data.categories.map(c => c.name));
+        } else if (Array.isArray(data)) { // Fallback for direct array response
+          setCategories(data.map(c => c.name));
+        }
+      } catch (error) {
+          console.error("Could not fetch categories", error);
+      }
+    };
+
     const fetchAllCities = async () => {
         try {
-            const { data } = await axios.get('/api/cities');
-            const cityNames = data.map(c => c.name);
-            setAllCities(cityNames);
-            if (cityNames.length > 0 && !cityNames.includes(city)) {
-              setCity(cityNames[0]);
+            const { data } = await api.get('/api/cities');
+            // ✅ CORRECTED: Check for the 'cities' array inside the data object
+            if (data && Array.isArray(data.cities)) {
+              const cityNames = data.cities.map(c => c.name);
+              setAllCities(cityNames);
+              if (cityNames.length > 0 && !cityNames.includes(city)) {
+                setCity(cityNames[0]);
+              }
+            } else if (Array.isArray(data)) { // Fallback for direct array response
+              const cityNames = data.map(c => c.name);
+              setAllCities(cityNames);
+              if (cityNames.length > 0 && !cityNames.includes(city)) {
+                setCity(cityNames[0]);
+              }
             }
         } catch (error) {
             console.error("Could not fetch cities", error);
         }
     };
+
     fetchAllCities();
     fetchAllCategories();
-  }, [city]);
+  }, []);
 
   return (
     <Router>
