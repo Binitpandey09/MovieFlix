@@ -45,7 +45,19 @@ app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ message: "MovieFlix Backend API is running!" });
+  res.json({ 
+    message: "MovieFlix Backend API is running!", 
+    status: "success",
+    endpoints: {
+      auth: "/api/auth",
+      movies: "/api/movies", 
+      bookings: "/api/bookings",
+      cities: "/api/cities",
+      banners: "/api/banners",
+      contact: "/api/contact",
+      categories: "/api/categories"
+    }
+  });
 });
 
 // API Routes
