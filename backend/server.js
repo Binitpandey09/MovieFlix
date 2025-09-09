@@ -49,6 +49,7 @@
 // });
 
 // module.exports = app;
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -67,31 +68,37 @@ const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 
-
-// --- Middleware ---
-
-// CORS configuration updated with your NEW Vercel URL ✅
-const corsOptions = {
-  origin: 'https://movieflix-frontend-5krgW3nk-binitpandey09s-projects.vercel.app',
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
-
-// Middleware to parse JSON bodies
+// Middleware
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://movieflix-frontend-afk2d4qee-binitpandey09s-projects.vercel.app',
+    'https://movieflix-frontend-onuzi04fx-binitpandey09s-projects.vercel.app', // Add this new one too
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
-
-// --- API Routes ---
-
-// Root route for API health check
+// Root route (ADD THIS SECTION)
 app.get('/', (req, res) => {
-  res.json({
-    message: "MovieFlix Backend API is running!",
-    status: "success"
+  res.json({ 
+    message: "MovieFlix Backend API is running!", 
+    status: "success",
+    endpoints: {
+      auth: "/api/auth",
+      movies: "/api/movies", 
+      bookings: "/api/bookings",
+      cities: "/api/cities",
+      banners: "/api/banners",
+      contact: "/api/contact",
+      categories: "/api/categories"
+    }
   });
 });
 
-// All other API endpoints
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/bookings', bookingRoutes);
@@ -100,9 +107,7 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/categories', categoryRoutes);
 
-
-// --- Database Connection ---
-// Make sure your .env file has the correct MONGO_URI
+// Database Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -110,8 +115,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("✅ MongoDB Atlas connected"))
 .catch(err => console.error("❌ MongoDB connection error:", err));
 
-
-// --- Start Server ---
+// Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
