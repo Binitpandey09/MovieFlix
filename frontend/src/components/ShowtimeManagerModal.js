@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, ListGroup, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
+// 1. Import your custom 'api' instance INSTEAD of 'axios'
+import api from '../api'; // Adjust path if api.js is in a different folder
 
 const ShowtimeManagerModal = ({ show, handleClose, movie, refreshMovies }) => {
     const [date, setDate] = useState('');
@@ -19,11 +20,13 @@ const ShowtimeManagerModal = ({ show, handleClose, movie, refreshMovies }) => {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         try {
             const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
-            const { data } = await axios.post(`/api/movies/${movie._id}/showtimes`, { date, time }, config);
+            // 2. Use 'api.post' which will correctly call your backend
+            const { data } = await api.post(`/api/movies/${movie._id}/showtimes`, { date, time }, config);
             setLocalShowtimes(data.showtimes);
             setDate('');
             setTime('');
         } catch (error) {
+            console.error('Failed to add showtime:', error); // Log the error for better debugging
             alert('Failed to add showtime');
         }
     };
@@ -41,7 +44,7 @@ const ShowtimeManagerModal = ({ show, handleClose, movie, refreshMovies }) => {
                     <Col md={6}>
                         <h5>Existing Showtimes</h5>
                         <ListGroup>
-                            {localShowtimes.map(st => (<ListGroup.Item key={st._id || st.date+st.time}>{st.date} at {st.time}</ListGroup.Item>))}
+                            {localShowtimes && localShowtimes.map(st => (<ListGroup.Item key={st._id || st.date+st.time}>{st.date} at {st.time}</ListGroup.Item>))}
                         </ListGroup>
                     </Col>
                     <Col md={6}>
