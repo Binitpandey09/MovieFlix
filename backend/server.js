@@ -69,7 +69,14 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000', // for local development
+    'https://your-vercel-app-name.vercel.app', // replace with your actual Vercel URL
+    // Add your custom domain if you have one
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // Root route (ADD THIS SECTION)
