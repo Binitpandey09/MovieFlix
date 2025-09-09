@@ -39,7 +39,7 @@ const EditMovieModal = ({ show, handleClose, movie, refreshMovies, cities }) => 
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         try {
             const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
-            await axios.put(`/api/movies/${movie._id}`, formData, config);
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/movies/${movie._id}`, formData, config);
             refreshMovies();
             handleClose();
         } catch (error) {
