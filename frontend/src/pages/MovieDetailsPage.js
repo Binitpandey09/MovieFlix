@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Image, Button, Container } from 'react-bootstrap';
-import axios from 'axios';
+import api from '../api';
 import './MovieDetailsPage.css';
 
 const MovieDetailsPage = () => {
@@ -12,7 +12,7 @@ const MovieDetailsPage = () => {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const { data } = await axios.get(`/api/movies/${id}`);
+                const { data } = await api.get(`/api/movies/${id}`);
                 setMovie(data);
             } catch (error) {
                 console.error("Failed to fetch movie details:", error);

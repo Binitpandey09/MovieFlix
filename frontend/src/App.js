@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import api from './api';
+import axios from 'axios';
 import Header from './components/Header';
 import FilterBar from './components/FilterBar';
-import Footer from './components/Footer';
+import Footer from './components/Footer'; // 1. Import the Footer
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import LoginPage from './pages/LoginPage';
@@ -13,49 +13,48 @@ import BookingsPage from './pages/BookingsPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import ContactPage from './pages/ContactPage';
 import BookingPage from './pages/BookingPage';
-import AllMoviesPage from './pages/AllMoviesPage';
+import AllMoviesPage from './pages/AllMoviesPage'; // 1. Import the new page
+
 
 function App() {
   const [city, setCity] = useState('Ludhiana');
   const [category, setCategory] = useState('All');
   const [allCities, setAllCities] = useState([]);
-  const [categories, setCategories] = useState([]);
-
-  // This is the section with the corrected code
-  useEffect(() => {
-    const fetchInitialData = async () => {
+  const [categories, setCategories] = useState([]); // State for all categories
+  const fetchAllCategories = async () => {
       try {
-        // Fetch categories
-        const categoriesResponse = await api.get('/api/categories');
-        if (categoriesResponse.data && Array.isArray(categoriesResponse.data.categories)) {
-          setCategories(categoriesResponse.data.categories.map(c => c.name));
-        }
-
-        // Fetch cities
-        const citiesResponse = await api.get('/api/cities');
-        if (citiesResponse.data && Array.isArray(citiesResponse.data.cities)) {
-          const cityNames = citiesResponse.data.cities.map(c => c.name);
-          setAllCities(cityNames);
-          // This logic now correctly uses the initial default city, not the state variable
-          if (cityNames.length > 0 && !cityNames.includes('Ludhiana')) {
-            setCity(cityNames[0]);
-          }
-        }
+          const { data } = await axios.get('/api/categories');
+          setCategories(data.map(c => c.name));
       } catch (error) {
-        console.error("Failed to fetch initial data", error);
+          console.error("Could not fetch categories", error);
       }
+  };
+  useEffect(() => {
+    
+    const fetchAllCities = async () => {
+        try {
+            const { data } = await axios.get('/api/cities');
+            const cityNames = data.map(c => c.name);
+            setAllCities(cityNames);
+            if (cityNames.length > 0 && !cityNames.includes(city)) {
+              setCity(cityNames[0]);
+            }
+        } catch (error) {
+            console.error("Could not fetch cities", error);
+        }
     };
-
-    fetchInitialData();
-    // ✅ CORRECTED: The dependency array is empty because this should only run once.
-    // The logic inside no longer depends on the 'city' state variable.
-  }, []);
+    fetchAllCities();
+    fetchAllCategories();
+  }, [city]);
 
   return (
     <Router>
+      {/* 2. Add flexbox wrapper to make footer sticky */}
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Header city={city} setCity={setCity} allCities={allCities} />
         <FilterBar setCategory={setCategory} categories={categories} />
+        
+        {/* 3. Make main content area expand */}
         <main style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<HomePage city={city} category={category} />} />
@@ -65,15 +64,15 @@ function App() {
             <Route path="/login" element={<Container className="my-4"><LoginPage /></Container>} />
             <Route path="/register" element={<Container className="my-4"><RegisterPage /></Container>} />
             <Route path="/my-bookings" element={<Container className="my-4"><BookingsPage /></Container>} />
-            <Route path="/movies" element={<AllMoviesPage />} />
-            <Route path="/admin" element={<AdminPanelPage categories={categories} fetchCategories={() => {}} />} />
+            <Route path="/movies" element={<AllMoviesPage />} /> {/* 2. Add the route */}
+            <Route path="/admin" element={<AdminPanelPage categories={categories} fetchCategories={fetchAllCategories} />} />
           </Routes>
         </main>
-        <Footer />
+
+        <Footer /> {/* 4. Add the Footer component at the end */}
       </div>
     </Router>
   );
 }
 
 export default App;
-

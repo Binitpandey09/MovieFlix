@@ -25,8 +25,8 @@ const corsOptions = {
     // Allow localhost for development
     if (origin === 'http://localhost:3000') return callback(null, true);
     
-    // Allow any Cloudflare Pages deployment for your project
-    if (origin.includes('movieflix') && origin.includes('pages.dev')) {
+    // Allow any movieflix-frontend vercel deployment
+    if (origin.includes('movieflix-frontend') && origin.includes('vercel.app')) {
       return callback(null, true);
     }
     
@@ -38,7 +38,6 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-// Make sure this line is below the corsOptions object
 app.use(cors(corsOptions));
 
 // Middleware to parse JSON request bodies

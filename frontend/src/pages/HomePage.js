@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Container, Tabs, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import MovieCard from '../components/MovieCard';
 import MovieCarousel from '../components/MovieCarousel';
 import './HomePage.css';
@@ -19,7 +19,7 @@ const HomePage = ({ city, category }) => {
                 // Otherwise, it sends the key ('now_showing' or 'coming_soon') as the status.
                 const statusQuery = activeTabKey === 'all_movies' ? '' : `&status=${activeTabKey}`;
                 
-                const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/movies?city=${city}&genre=${category}${statusQuery}&limit=12`);
+                const { data } = await api.get(`${process.env.REACT_APP_API_URL}/api/movies?city=${city}&genre=${category}${statusQuery}&limit=12`);
                 setMovies(data && Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error("Failed to fetch movies:", error);

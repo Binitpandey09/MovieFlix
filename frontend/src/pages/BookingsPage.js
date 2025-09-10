@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Image } from 'react-bootstrap';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
 const BookingsPage = () => {
@@ -15,7 +15,7 @@ const BookingsPage = () => {
             const fetchBookings = async () => {
                 try {
                     const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-                    const { data } = await axios.get('/api/bookings/my', config);
+                    const { data } = await api.get('/api/bookings/my', config);
                     setBookings(data);
                 } catch (error) {
                     console.error('Failed to fetch bookings', error);

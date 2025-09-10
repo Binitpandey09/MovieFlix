@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import SeatSelector from '../components/SeatSelector';
 import './BookingPage.css';
@@ -16,7 +16,7 @@ const BookingPage = () => {
 
     useEffect(() => {
         const fetchMovie = async () => {
-            const { data } = await axios.get(`/api/movies/${movieId}`);
+            const { data } = await api.get(`/api/movies/${movieId}`);
             setMovie(data);
             if (data.showtimes && data.showtimes.length > 0) {
                 setSelectedShowtime(data.showtimes[0]);
@@ -46,7 +46,7 @@ const BookingPage = () => {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
         
         try {
-            await axios.post('/api/bookings', bookingDetails, config);
+            await api.post('/api/bookings', bookingDetails, config);
             alert('Booking successful!');
             navigate('/my-bookings');
         } catch (error) {

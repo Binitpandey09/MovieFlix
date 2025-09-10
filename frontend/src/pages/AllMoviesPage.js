@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Container } from 'react-bootstrap';
-import axios from 'axios';
+import api from '../api';
 import MovieCard from '../components/MovieCard';
 
 const AllMoviesPage = () => {
@@ -10,7 +10,7 @@ const AllMoviesPage = () => {
         // This fetches ALL movies without any limit
         const fetchAllMovies = async () => {
             try {
-                const { data } = await axios.get('/api/movies');
+                const { data } = await api.get('/api/movies');
                 setAllMovies(data);
             } catch (error) {
                 console.error("Failed to fetch all movies:", error);
