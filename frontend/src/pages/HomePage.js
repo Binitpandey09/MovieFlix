@@ -3,23 +3,68 @@ import { Row, Col, Container, Tabs, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import MovieCard from '../components/MovieCard';
-import MovieCarousel from '../components/MovieCarousel';
+import BannerCarousel from '../components/BannerCarousel';
 import './HomePage.css';
 
 const HomePage = ({ city, category }) => {
     // State is now simplified to a single list of movies for the grid
     const [movies, setMovies] = useState([]);
+    const [banners, setBanners] = useState([]);
     const [activeTabKey, setActiveTabKey] = useState('now_showing');
+
+    // Fetch banners for carousel
+    useEffect(() => {
+        const fetchBanners = async () => {
+            try {
+                const { data } = await api.get('/api/banners');
+                
+                // Transform API data to BannerCarousel format
+                const formattedBanners = data
+                    .filter(banner => banner.movie)
+                    .slice(0, 3) // Ensure max 3 banners
+                    .map(banner => ({
+                        id: banner._id,
+                        title: banner.movie.title,
+                        subtitle: banner.movie.genre || 'Now Playing',
+                        description: banner.movie.description || `${banner.movie.duration || ''} ${banner.movie.language ? '• ' + banner.movie.language : ''}`.trim(),
+                        ctaText: 'Book Tickets',
+                        ctaHref: `/movie/${banner.movie._id}`,
+                        imageUrl: banner.bannerImage,
+                        alt: `${banner.movie.title} movie banner`,
+                    }));
+                
+                setBanners(formattedBanners);
+            } catch (error) {
+                console.error('Failed to fetch banners:', error);
+                setBanners([]);
+            }
+        };
+        
+        fetchBanners();
+    }, []);
 
     // useEffect is now simplified to a single API call
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                // 'all_movies' key sends no status, fetching all movies.
-                // Otherwise, it sends the key ('now_showing' or 'coming_soon') as the status.
-                const statusQuery = activeTabKey === 'all_movies' ? '' : `&status=${activeTabKey}`;
+                // Build query based on active tab
+                let statusQuery = '';
+                if (activeTabKey === 'now_showing') {
+                    statusQuery = '&status=now_showing';
+                } else if (activeTabKey === 'coming_soon') {
+                    statusQuery = '&status=coming_soon';
+                } else if (activeTabKey === 'experiences') {
+                    statusQuery = '&status=experiences';
+                }
+                // 'all_movies' sends no status, fetching all movies
                 
-                const { data } = await api.get(`${process.env.REACT_APP_API_URL}/api/movies?city=${city}&genre=${category}${statusQuery}&limit=12`);
+                const apiUrl = `/api/movies?city=${city}&genre=${category}${statusQuery}&limit=12`;
+                console.log('Fetching movies with URL:', apiUrl);
+                console.log('Active tab:', activeTabKey);
+                console.log('Full URL:', process.env.REACT_APP_API_URL + apiUrl);
+                
+                const { data } = await api.get(apiUrl);
+                console.log('Received movies:', data?.length || 0);
                 setMovies(data && Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error("Failed to fetch movies:", error);
@@ -35,6 +80,7 @@ const HomePage = ({ city, category }) => {
         switch(activeTabKey) {
             case 'now_showing': return 'Now Showing';
             case 'coming_soon': return 'Coming Soon';
+            case 'experiences': return 'Experiences';
             case 'all_movies':
             default: return 'Movies';
         }
@@ -42,7 +88,12 @@ const HomePage = ({ city, category }) => {
 
     return (
         <>
-            <MovieCarousel />
+            <BannerCarousel 
+                banners={banners}
+                autoplay={true}
+                autoplayInterval={4000}
+                loop={true}
+            />
 
             <div className="tabs-wrapper">
                 <Container>

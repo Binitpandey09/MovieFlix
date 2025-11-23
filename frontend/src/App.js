@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import axios from 'axios';
 import Header from './components/Header';
-import FilterBar from './components/FilterBar';
-import Footer from './components/Footer'; // 1. Import the Footer
+import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import LoginPage from './pages/LoginPage';
@@ -17,8 +16,8 @@ import AllMoviesPage from './pages/AllMoviesPage'; // 1. Import the new page
 
 
 function App() {
-  const [city, setCity] = useState('Ludhiana');
-  const [category, setCategory] = useState('All');
+  const [city, setCity] = useState('Amritsar');
+  const [category] = useState('All'); // Removed setCategory as FilterBar is removed
   const [allCities, setAllCities] = useState([]);
   const [categories, setCategories] = useState([]); // State for all categories
   const fetchAllCategories = async () => {
@@ -52,7 +51,7 @@ function App() {
       {/* 2. Add flexbox wrapper to make footer sticky */}
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Header city={city} setCity={setCity} allCities={allCities} />
-        <FilterBar setCategory={setCategory} categories={categories} />
+        {/* FilterBar removed - Home and Category dropdown hidden */}
         
         {/* 3. Make main content area expand */}
         <main style={{ flex: 1 }}>

@@ -11,12 +11,25 @@ exports.getBanners = async (req, res) => {
 
 exports.addBanner = async (req, res) => {
     const { movie, bannerImage, title } = req.body;
+    
+    // Validation
+    if (!movie) {
+        return res.status(400).json({ message: 'Movie is required' });
+    }
+    if (!bannerImage) {
+        return res.status(400).json({ message: 'Banner image URL is required' });
+    }
+    
     try {
         const banner = new Banner({ movie, bannerImage, title });
         const createdBanner = await banner.save();
         res.status(201).json(createdBanner);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error('Error adding banner:', error);
+        res.status(500).json({ 
+            message: 'Failed to add banner', 
+            error: error.message 
+        });
     }
 };
 

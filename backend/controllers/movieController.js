@@ -2,35 +2,44 @@ const Movie = require('../models/Movie');
 
 exports.getMovies = async (req, res) => {
     try {
-        const query = {};
+        const query = { isEnabled: true }; // Only show enabled movies to users
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Start of today
+        today.setHours(0, 0, 0, 0);
 
-        // This formats today's date as "YYYY-MM-DD" for comparison
         const todayString = today.toISOString().split('T')[0];
+
+        console.log('GET /api/movies - Query params:', req.query);
 
         if (req.query.city) {
             query.cities = req.query.city;
         }
         if (req.query.genre && req.query.genre !== 'All') {
-            query.genre = req.query.genre;
+            query.genre = { $regex: req.query.genre, $options: 'i' };
         }
 
-        // --- CORRECTED LOGIC ---
+        // TMDB-based filtering
         if (req.query.status === 'coming_soon') {
-            // "Coming Soon" are movies whose release date is in the future AND have no showtimes yet.
+            // Upcoming movies: release date in future
             query.releaseDate = { $gt: today };
+            console.log('Filtering for coming_soon movies');
         } else if (req.query.status === 'now_showing') {
-            // "Now Showing" are movies that have at least one showtime on or after today.
-            query['showtimes.date'] = { $gte: todayString };
+            // Now showing: released + has showtimes
+            query.releaseDate = { $lte: today };
+            query['showtimes.0'] = { $exists: true }; // Has at least one showtime
+            console.log('Filtering for now_showing movies');
+        } else if (req.query.status === 'experiences') {
+            // All enabled movies
+            console.log('Filtering for experiences');
         }
-        // If no status is sent (like for the "All Movies" tab or Admin Panel), it won't filter by date.
         
         const limit = req.query.limit ? parseInt(req.query.limit) : 0;
         
+        console.log('MongoDB query:', JSON.stringify(query));
         const movies = await Movie.find(query).limit(limit);
+        console.log('Found movies:', movies.length);
         res.json(movies);
     } catch (error) {
+        console.error('Error in getMovies:', error);
         res.status(500).json({ message: "Server Error" });
     }
 };

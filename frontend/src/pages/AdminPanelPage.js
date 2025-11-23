@@ -4,10 +4,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import EditMovieModal from '../components/EditMovieModal';
 import ShowtimeManagerModal from '../components/ShowtimeManagerModal';
+import TMDBMovieManager from '../components/TMDBMovieManager';
 import './AdminPanelPage.css'; // Import the new CSS
 
 const AdminPanelPage = () => {
-    const [activeView, setActiveView] = useState('viewMovies'); // State to control which view is shown
+    const [activeView, setActiveView] = useState('tmdbManager'); // Default to TMDB Manager
 
     // API URL from environment variable, fallback to localhost:5001
     const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
@@ -165,17 +166,37 @@ const AdminPanelPage = () => {
     const addBannerHandler = async (e) => {
         e.preventDefault();
         if (!selectedMovieForBanner || !bannerImageUrl) return alert('Please select a movie and provide a URL.');
-        const bannerExists = banners.some(banner => banner.movie._id === selectedMovieForBanner);
+        const bannerExists = banners.some(banner => banner.movie && banner.movie._id === selectedMovieForBanner);
         if (bannerExists) return alert('A banner for this movie already exists.');
+        
+        // Check if user is still logged in
+        if (!userInfo || !userInfo.token) {
+            alert('Session expired. Please login again.');
+            localStorage.removeItem('userInfo');
+            navigate('/login');
+            return;
+        }
+        
         const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
         try {
             await axios.post(`${API_URL}/api/banners`, { movie: selectedMovieForBanner, bannerImage: bannerImageUrl }, config);
-            alert('Banner added!');
+            alert('Banner added successfully!');
             fetchBanners();
             setSelectedMovieForBanner('');
             setBannerImageUrl('');
         } catch (error) {
-            alert('Failed to add banner.');
+            console.error('Banner add error:', error);
+            
+            // Handle 401 Unauthorized - token expired
+            if (error.response?.status === 401) {
+                alert('Your session has expired. Please login again.');
+                localStorage.removeItem('userInfo');
+                navigate('/login');
+                return;
+            }
+            
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || 'Failed to add banner';
+            alert(`Failed to add banner: ${errorMessage}`);
         }
     };
 
@@ -249,6 +270,8 @@ const AdminPanelPage = () => {
                         </Form>
                     </div>
                 );
+            case 'tmdbManager':
+                return <TMDBMovieManager />;
             case 'viewMovies':
             default:
                 return (
@@ -292,6 +315,7 @@ const AdminPanelPage = () => {
             <div className="admin-panel-container">
                 <div className="admin-sidebar">
                     <Nav variant="pills" activeKey={activeView} onSelect={(k) => setActiveView(k)} className="flex-column">
+                        <Nav.Link eventKey="tmdbManager">🎬 TMDB Manager</Nav.Link>
                         <Nav.Link eventKey="viewMovies">View Movies & Banners</Nav.Link>
                         <Nav.Link eventKey="addMovie">Add Movie</Nav.Link>
                         <Nav.Link eventKey="addCity">Add New City</Nav.Link>

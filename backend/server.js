@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const cron = require('node-cron');
+const { importTMDBMovies } = require('./services/tmdbService');
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ const cityRoutes = require('./routes/cityRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const tmdbRoutes = require('./routes/tmdbRoutes');
 
 const app = express();
 
@@ -68,14 +71,36 @@ app.use('/api/cities', cityRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/tmdb', tmdbRoutes);
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("✅ MongoDB Atlas connected"))
+.then(() => {
+    console.log("✅ MongoDB Atlas connected");
+    
+    // Run TMDB import on startup (optional)
+    if (process.env.AUTO_IMPORT_ON_START === 'true') {
+        console.log('🎬 Running initial TMDB import...');
+        importTMDBMovies().catch(err => console.error('Initial import failed:', err));
+    }
+})
 .catch(err => console.error("❌ MongoDB connection error:", err));
+
+// Cron job: Auto-import TMDB movies daily at 3 AM
+if (process.env.ENABLE_CRON === 'true') {
+    cron.schedule('0 3 * * *', async () => {
+        console.log('🕐 Running scheduled TMDB import...');
+        try {
+            await importTMDBMovies();
+        } catch (error) {
+            console.error('Scheduled import failed:', error);
+        }
+    });
+    console.log('⏰ TMDB auto-import cron job scheduled (daily at 3 AM)');
+}
 
 // Start Server
 const PORT = process.env.PORT || 5001;
