@@ -1,0 +1,169 @@
+/* City Page Banner Styles - Matching Home Page BannerCarousel */
+
+/* Banner Container - Matches .banner-carousel-wrapper */
+.city-banner-container {
+    position: relative;
+    width: 100%;
+    max-width: 1300px;
+    /* Adjusted width as requested */
+    margin: 20px auto;
+    /* Matches HomePage.css margin */
+    padding: 0 20px;
+    /* Matches BannerCarousel padding */
+    background-color: transparent;
+}
+
+/* Inner Banner - Matches .banner-swiper */
+.city-banner-inner {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.city-banner-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #1a1a1a;
+}
+
+.city-banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.city-banner-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+    pointer-events: none;
+}
+
+.city-banner-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 32px;
+    color: #ffffff;
+    z-index: 2;
+}
+
+.city-banner-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+}
+
+.city-banner-subtitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    opacity: 0.95;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Tabs Wrapper - Matches .tabs-wrapper in HomePage.css */
+.city-tabs-wrapper {
+    background-color: #f2f2f2;
+    padding: 0.09rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-top: 0;
+}
+
+/* Tabs Styling - Matches .movie-tabs-nav in HomePage.css */
+.custom-tabs {
+    border-bottom: none;
+}
+
+.custom-tabs .nav-link {
+    border: none;
+    color: #333;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    position: relative;
+    background-color: transparent !important;
+}
+
+.custom-tabs .nav-link.active {
+    color: #333 !important;
+    font-weight: 700;
+}
+
+.custom-tabs .nav-link.active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 4px;
+    background-color: #f5c518;
+    /* Yellow underline */
+    border-radius: 2px;
+}
+
+.custom-tabs .nav-link:hover {
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 1199px) {
+    .city-banner-inner {
+        height: 360px;
+    }
+
+    .city-banner-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 899px) {
+    .city-banner-inner {
+        height: 220px;
+        border-radius: 10px;
+    }
+
+    .city-banner-title {
+        font-size: 1.75rem;
+    }
+
+    .city-banner-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .city-banner-content {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 639px) {
+    .city-banner-inner {
+        height: 180px;
+        border-radius: 8px;
+    }
+
+    .city-banner-title {
+        font-size: 1.5rem;
+    }
+
+    .city-banner-subtitle {
+        font-size: 1rem;
+    }
+
+    .city-banner-content {
+        padding: 20px;
+    }
+}

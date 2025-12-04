@@ -1,0 +1,29 @@
+.admin-panel-container {
+    display: flex;
+    margin-top: 1.5rem;
+}
+
+.admin-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-right: 1px solid #dee2e6;
+}
+
+.admin-sidebar .nav-link {
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.admin-sidebar .nav-link.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.admin-content {
+    flex-grow: 1;
+    padding: 0 20px;
+}

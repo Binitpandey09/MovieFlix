@@ -1,0 +1,73 @@
+.tabs-wrapper {
+    background-color: #f2f2f2;
+    padding: 0.09rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-top: 0; /* No margin - spacing handled by banner bottom margin */
+}
+.movie-tabs-nav {
+    border-bottom: none;
+}
+.movie-tabs-nav .nav-link {
+    border: none;
+    color: #333;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    position: relative;
+    background-color: transparent !important;
+}
+.movie-tabs-nav .nav-link.active {
+    color: #333 !important;
+    font-weight: 700;
+}
+.movie-tabs-nav .nav-link.active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 4px;
+    background-color: #f5c518;
+    border-radius: 2px;
+}
+.movie-tabs-nav .nav-link:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Banner spacing - 20px gap after header and before tabs */
+.banner-carousel-wrapper {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Add spacing for section */
+.section-spacing {
+    margin-top: 30px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.see-all-link {
+    color: #ec5e71;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.see-all-link:hover {
+    color: #d94d60;
+    text-decoration: none;
+}

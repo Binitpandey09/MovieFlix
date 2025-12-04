@@ -1,0 +1,119 @@
+.movie-details-wrapper {
+    background-size: cover;
+    background-position: center;
+    color: white;
+    min-height: 60vh; /* Reduced height */
+}
+.movie-details-overlay {
+    background: linear-gradient(90deg, #1a1a1a 30%, rgba(26, 26, 26, 0.9) 60%, rgba(26, 26, 26, 0.7) 100%);
+    padding: 2rem 0; /* Reduced padding */
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+.movie-details-content {
+    align-items: flex-start; /* Align to top */
+}
+.movie-poster {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    max-height: 400px; /* Limit poster height */
+    object-fit: cover;
+}
+.details-container {
+    padding-left: 2rem;
+}
+.movie-title {
+    font-size: 2.5rem; /* Smaller title */
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.rating-box {
+    background-color: #333;
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    color: #ffc107;
+    font-weight: bold;
+}
+.tags-box {
+    margin-top: 0.8rem;
+}
+.tags-box .tag {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.movie-meta {
+    margin-top: 0.8rem;
+    color: #ccc;
+    font-size: 0.95rem;
+}
+.movie-description {
+    margin-top: 1rem;
+    color: #e0e0e0;
+    line-height: 1.5;
+    max-width: 90%;
+    font-size: 1rem;
+}
+.action-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+.book-tickets-btn {
+    background-color: #f84464;
+    border-color: #f84464;
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+}
+.trailer-btn {
+    background-color: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.trailer-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+/* Modal Styles */
+.trailer-modal .modal-content {
+    background-color: #000;
+    color: #fff;
+}
+.trailer-modal .modal-header {
+    border-bottom: 1px solid #333;
+}
+.trailer-modal .btn-close {
+    filter: invert(1);
+}
+.video-responsive {
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    position: relative;
+    height: 0;
+}
+.video-responsive iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}

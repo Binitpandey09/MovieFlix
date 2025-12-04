@@ -1,0 +1,532 @@
+/* CSS Variables for easy customization */
+:root {
+  --carousel-gap: 16px;
+  --carousel-border-radius: 12px;
+  --carousel-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  --carousel-transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main carousel wrapper - Centered boxed layout */
+.banner-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; /* Fixed max width for centered boxed layout */
+  margin: 0 auto; /* Centered, spacing controlled by HomePage.css */
+  padding: 0 20px; /* Padding for mobile */
+  background-color: transparent;
+}
+
+/* Swiper container - No overflow for clean boxed look */
+.banner-swiper {
+  width: 100%;
+  height: auto;
+  overflow: hidden; /* Clean edges, no overflow */
+  border-radius: 12px; /* Rounded corners for modern look */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); /* Subtle shadow */
+}
+
+/* Swiper wrapper */
+.banner-swiper .swiper-wrapper {
+  align-items: center;
+}
+
+/* Swiper slide - Full width within container */
+.banner-swiper .swiper-slide {
+  width: 100% !important; /* Full width, no peek effect */
+  max-width: 100% !important;
+  flex-shrink: 0;
+}
+
+/* Banner slide - Clean centered design */
+.banner-slide {
+  position: relative;
+  width: 100%;
+  height: 350px; /* Increased height for better visibility */
+  border-radius: 0; /* No border radius on slide itself (container has it) */
+  overflow: hidden;
+  transition: transform var(--carousel-transition);
+  outline: none;
+  opacity: 1; /* Always full opacity */
+  transform: scale(1); /* No scaling */
+}
+
+.banner-slide:hover {
+  transform: translateY(-2px);
+}
+
+.banner-slide:focus-visible {
+  outline: 3px solid #ec5e71;
+  outline-offset: 2px;
+}
+
+/* Image container with aspect ratio */
+.banner-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #1a1a1a;
+}
+
+/* Banner image */
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Dark gradient overlay for text readability */
+.banner-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+  pointer-events: none;
+}
+
+/* Banner content overlay */
+.banner-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px;
+  color: #ffffff;
+  z-index: 2;
+}
+
+.banner-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+
+.banner-subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  opacity: 0.95;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.banner-description {
+  font-size: 1rem;
+  margin: 0 0 16px 0;
+  max-width: 600px;
+  opacity: 0.9;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* CTA Button */
+.banner-cta {
+  display: inline-block;
+  padding: 12px 32px;
+  background-color: #ec5e71;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all var(--carousel-transition);
+  box-shadow: 0 4px 12px rgba(236, 94, 113, 0.3);
+}
+
+.banner-cta:hover {
+  background-color: #d94d60;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(236, 94, 113, 0.4);
+}
+
+.banner-cta:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Custom Navigation Arrows */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--carousel-transition);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #333;
+  opacity: 0;
+}
+
+.banner-carousel-wrapper:hover .carousel-arrow {
+  opacity: 1;
+}
+
+.carousel-arrow:hover {
+  background-color: #ffffff;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-arrow:focus-visible {
+  opacity: 1;
+  outline: 3px solid #ec5e71;
+  outline-offset: 2px;
+}
+
+.carousel-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.swiper-button-prev-custom {
+  left: 24px;
+}
+
+.swiper-button-next-custom {
+  right: 24px;
+}
+
+/* Custom Pagination Dots */
+.swiper-pagination-custom {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.carousel-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all var(--carousel-transition);
+  border: none;
+  padding: 0;
+}
+
+.carousel-bullet:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+.carousel-bullet-active {
+  background-color: #ffffff;
+  width: 12px;
+  height: 12px;
+}
+
+.carousel-bullet:focus-visible {
+  outline: 2px solid #ec5e71;
+  outline-offset: 2px;
+}
+
+/* Fallback Hero */
+.fallback-hero {
+  width: 100%;
+  height: 420px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--carousel-border-radius);
+  box-shadow: var(--carousel-shadow);
+  margin: 0 auto;
+}
+
+.fallback-content {
+  text-align: center;
+  color: #ffffff;
+  padding: 32px;
+}
+
+.fallback-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+.fallback-subtitle {
+  font-size: 1.5rem;
+  margin: 0 0 24px 0;
+  opacity: 0.95;
+}
+
+.fallback-cta {
+  display: inline-block;
+  padding: 14px 36px;
+  background-color: #ffffff;
+  color: #667eea;
+  text-decoration: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all var(--carousel-transition);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.fallback-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+
+/* Laptop / Small Desktop (900-1199px) */
+@media (max-width: 1199px) {
+  .banner-slide {
+    height: 360px;
+  }
+  
+  .fallback-hero {
+    height: 360px;
+  }
+  
+  .banner-title {
+    font-size: 2rem;
+  }
+  
+  .banner-content {
+    padding: 28px;
+  }
+}
+
+/* Tablet (640-899px) */
+@media (max-width: 899px) {
+  :root {
+    --carousel-gap: 12px;
+  }
+  
+  .banner-carousel-wrapper {
+    margin: 12px auto;
+    padding: 0 12px;
+  }
+  
+  .banner-swiper {
+    padding: 0 40px;
+  }
+  
+  .banner-swiper .swiper-slide {
+    width: 90%;
+  }
+  
+  .banner-slide {
+    height: 220px;
+    border-radius: 10px;
+  }
+  
+  .fallback-hero {
+    height: 220px;
+    border-radius: 10px;
+  }
+  
+  .banner-title {
+    font-size: 1.75rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .banner-description {
+    font-size: 0.95rem;
+  }
+  
+  .banner-content {
+    padding: 24px;
+  }
+  
+  .carousel-arrow {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .swiper-button-prev-custom {
+    left: 16px;
+  }
+  
+  .swiper-button-next-custom {
+    right: 16px;
+  }
+}
+
+/* Mobile (<640px) */
+@media (max-width: 639px) {
+  :root {
+    --carousel-gap: 10px;
+    --carousel-border-radius: 8px;
+  }
+  
+  .banner-carousel-wrapper {
+    margin: 10px auto;
+    padding: 0 10px;
+  }
+  
+  .banner-swiper {
+    padding: 0 30px;
+  }
+  
+  .banner-swiper .swiper-slide {
+    width: 92%;
+  }
+  
+  .banner-slide {
+    height: 180px;
+    border-radius: 8px;
+  }
+  
+  .fallback-hero {
+    height: 180px;
+    border-radius: 8px;
+  }
+  
+  .banner-title {
+    font-size: 1.5rem;
+  }
+  
+  .banner-subtitle {
+    font-size: 1rem;
+  }
+  
+  .banner-description {
+    display: none; /* Hide description on mobile for cleaner look */
+  }
+  
+  .banner-content {
+    padding: 20px;
+  }
+  
+  .banner-cta {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+  
+  .carousel-arrow {
+    width: 40px;
+    height: 40px;
+    opacity: 1; /* Always visible on mobile */
+  }
+  
+  .swiper-button-prev-custom {
+    left: 12px;
+  }
+  
+  .swiper-button-next-custom {
+    right: 12px;
+  }
+  
+  .swiper-pagination-custom {
+    bottom: 12px;
+    gap: 8px;
+  }
+  
+  .carousel-bullet {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .carousel-bullet-active {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .fallback-title {
+    font-size: 2rem;
+  }
+  
+  .fallback-subtitle {
+    font-size: 1.2rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .banner-slide,
+  .carousel-arrow,
+  .banner-cta,
+  .carousel-bullet {
+    transition: none;
+  }
+  
+  .banner-slide:hover {
+    transform: none;
+  }
+  
+  .carousel-arrow:hover {
+    transform: translateY(-50%);
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .banner-overlay {
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.85) 100%);
+  }
+  
+  .carousel-arrow {
+    border: 2px solid #000;
+  }
+  
+  .banner-cta {
+    border: 2px solid #fff;
+  }
+}
+
+
+/* Responsive Design for Boxed Layout */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .banner-carousel-wrapper {
+    max-width: 900px;
+    padding: 0 15px;
+  }
+  
+  .banner-slide {
+    height: 300px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .banner-carousel-wrapper {
+    max-width: 100%;
+    padding: 0 15px;
+    margin: 20px auto;
+  }
+  
+  .banner-swiper {
+    border-radius: 10px;
+  }
+  
+  .banner-slide {
+    height: 220px;
+  }
+  
+  .banner-title {
+    font-size: 1.5rem;
+  }
+  
+  .banner-content {
+    padding: 20px;
+  }
+  
+  .carousel-arrow {
+    opacity: 1;
+  }
+}

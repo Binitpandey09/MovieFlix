@@ -1,0 +1,315 @@
+/* Main header container */
+.bms-header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Top navigation bar */
+.top-navbar {
+    background-color: #ffffff !important;
+    padding: 14px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+/* Logo styling - MovieFlix */
+.logo-brand {
+    font-size: 1.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-right: 40px;
+    letter-spacing: -0.8px;
+}
+
+.logo-movie {
+    color: #333333;
+}
+
+.logo-flix {
+    color: #ec5e71;
+}
+
+.logo-brand:hover .logo-movie,
+.logo-brand:hover .logo-flix {
+    opacity: 0.8;
+}
+
+/* Search bar */
+.search-bar {
+    flex: 1;
+    max-width: 580px;
+    margin: 0 30px;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999999;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.search-field {
+    width: 100%;
+    padding: 9px 16px 9px 42px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #333;
+    transition: all 0.2s ease;
+    background-color: #ffffff;
+}
+
+.search-field:focus {
+    border-color: #ec5e71;
+    box-shadow: 0 0 0 2px rgba(236, 94, 113, 0.1);
+    outline: none;
+    background-color: #ffffff;
+}
+
+.search-field::placeholder {
+    color: #999999;
+    font-size: 0.875rem;
+}
+
+/* Navigation items */
+.nav-items {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Location dropdown */
+.location-select .dropdown-toggle {
+    color: #333333;
+    font-size: 0.875rem;
+    font-weight: 400;
+    padding: 6px 12px;
+    background-color: transparent;
+    border: none;
+}
+
+.location-select .dropdown-toggle::after {
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.location-select .dropdown-toggle:hover {
+    color: #ec5e71;
+}
+
+/* Profile dropdown */
+.profile-menu .dropdown-toggle {
+    color: #333333;
+    font-size: 0.875rem;
+    font-weight: 400;
+    padding: 6px 12px;
+    background-color: transparent;
+    border: none;
+}
+
+.profile-menu .dropdown-toggle:hover {
+    color: #ec5e71;
+}
+
+/* Sign in button */
+.signin-button {
+    background-color: #ec5e71;
+    color: #ffffff !important;
+    padding: 7px 18px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    margin-left: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.signin-button:hover {
+    background-color: #d94d60;
+}
+
+/* Hamburger menu */
+.hamburger-menu {
+    color: #333333;
+    padding: 6px 8px;
+    margin-left: 8px;
+}
+
+.hamburger-menu:hover {
+    color: #ec5e71;
+}
+
+/* Bottom navigation bar */
+.bottom-navbar {
+    background-color: #f5f5f5;
+    padding: 0;
+}
+
+.nav-sections {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-nav,
+.right-nav {
+    display: flex;
+    gap: 0;
+}
+
+.nav-item {
+    color: #666666;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    padding: 11px 16px;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-item:hover {
+    color: #ec5e71;
+}
+
+.nav-item.active {
+    color: #ec5e71;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 6px 0;
+    margin-top: 4px;
+}
+
+.dropdown-item {
+    padding: 10px 18px;
+    font-size: 0.875rem;
+    color: #333333;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f8f8;
+    color: #ec5e71;
+}
+
+.dropdown-divider {
+    margin: 6px 0;
+    border-color: #e0e0e0;
+}
+
+/* Responsive design */
+@media (max-width: 991px) {
+    .search-bar {
+        display: none !important;
+    }
+    
+    .logo-brand {
+        font-size: 1.5rem;
+        margin-right: 20px;
+    }
+    
+    .bottom-navbar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .nav-sections {
+        flex-wrap: nowrap;
+        min-width: max-content;
+    }
+    
+    .left-nav,
+    .right-nav {
+        flex-wrap: nowrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-navbar {
+        padding: 12px 0;
+    }
+    
+    .logo-brand {
+        font-size: 1.35rem;
+    }
+    
+    .signin-button {
+        padding: 6px 14px;
+        font-size: 0.8125rem;
+        margin-left: 6px;
+    }
+    
+    .nav-item {
+        font-size: 0.75rem;
+        padding: 10px 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo-brand {
+        font-size: 1.25rem;
+    }
+    
+    .nav-item {
+        padding: 9px 12px;
+    }
+}
+
+/* Navbar toggle button */
+.navbar-toggler {
+    border: none;
+    padding: 4px 8px;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+/* Collapsed navbar on mobile */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        margin-top: 12px;
+    }
+    
+    .nav-items {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .location-select,
+    .profile-menu {
+        width: 100%;
+    }
+    
+    .location-select .dropdown-toggle,
+    .profile-menu .dropdown-toggle {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .signin-button {
+        margin-left: 0;
+        margin-top: 8px;
+        display: block;
+        text-align: center;
+    }
+    
+    .hamburger-menu {
+        display: none !important;
+    }
+}
