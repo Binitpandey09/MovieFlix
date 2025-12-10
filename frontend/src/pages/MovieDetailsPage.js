@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Image, Button, Container, Modal } from 'react-bootstrap';
 import api from '../api';
+import CitySelectionModal from '../components/CitySelectionModal';
 import './MovieDetailsPage.css';
 
 const MovieDetailsPage = () => {
@@ -9,6 +10,7 @@ const MovieDetailsPage = () => {
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
     const [showTrailer, setShowTrailer] = useState(false);
+    const [showCityModal, setShowCityModal] = useState(false);
 
     useEffect(() => {
         const fetchMovie = async () => {
@@ -23,8 +25,13 @@ const MovieDetailsPage = () => {
     }, [id]);
 
     const handleBookTickets = () => {
-        // navigate(`/booking/${movie._id}`);
-        console.log("Booking disabled as per user request");
+        setShowCityModal(true);
+    };
+
+    const handleCitySelect = (city) => {
+        setShowCityModal(false);
+        const cityQuery = `?cityId=${city._id}&city=${city.name}`;
+        navigate(`/buytickets/${movie._id}${cityQuery}`);
     };
 
     if (!movie) {
@@ -87,6 +94,12 @@ const MovieDetailsPage = () => {
                     </div>
                 </Modal.Body>
             </Modal>
+
+            <CitySelectionModal
+                show={showCityModal}
+                onHide={() => setShowCityModal(false)}
+                onSelect={handleCitySelect}
+            />
         </div>
     );
 };

@@ -6,10 +6,7 @@ exports.getMovies = async (req, res) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const todayString = today.toISOString().split('T')[0];
-
         console.log('GET /api/movies - Query params:', req.query);
-
 
         if (req.query.genre && req.query.genre !== 'All') {
             query.genre = { $regex: req.query.genre, $options: 'i' };
@@ -18,38 +15,56 @@ exports.getMovies = async (req, res) => {
         // Search functionality
         if (req.query.search) {
             query.title = { $regex: req.query.search, $options: 'i' };
-            console.log('Searching for title:', req.query.search);
         }
 
-        // TMDB-based filtering
-        if (req.query.status === 'coming_soon') {
-            // Upcoming movies: release date in future
-            query.releaseDate = { $gt: today };
-            console.log('Filtering for coming_soon movies');
-        } else if (req.query.status === 'now_showing') {
-            // Now showing: released + has showtimes
-            query.releaseDate = { $lte: today };
-            query['showtimes.0'] = { $exists: true }; // Has at least one showtime
-            console.log('Filtering for now_showing movies');
-        } else if (req.query.status === 'experiences') {
-            // All enabled movies
-            console.log('Filtering for experiences');
+        // TMDB-based filtering / City-based filtering
+        // STRICT CHECK: If city is present (and not 'undefined'), we filter by city.
+        // We DO NOT fall back to global filtering if city is present.
+        if (req.query.city && req.query.city !== 'undefined' && req.query.city !== '') {
+            // City-specific filtering
+            console.log(`Filtering for city: ${req.query.city}, status: ${req.query.status}`);
+
+            if (req.query.status === 'now_showing') {
+                query.cityStatus = {
+                    $elemMatch: {
+                        city: req.query.city,
+                        status: 'now_showing'
+                    }
+                };
+            } else if (req.query.status === 'coming_soon') {
+                query.cityStatus = {
+                    $elemMatch: {
+                        city: req.query.city,
+                        status: 'coming_soon'
+                    }
+                };
+            } else {
+                // If city is present but status is not recognized (or missing), return nothing.
+                // This prevents showing global movies when looking at a specific city page.
+                query._id = null;
+            }
+        } else {
+            // Default Global filtering (Home Page) - ONLY runs if city is NOT present
+            if (req.query.status === 'coming_soon') {
+                // Upcoming movies: release date in future
+                query.releaseDate = { $gt: today };
+            } else if (req.query.status === 'now_showing') {
+                // Now showing: released + has showtimes
+                query.releaseDate = { $lte: today };
+                query['showtimes.0'] = { $exists: true }; // Has at least one showtime
+            }
         }
 
         const limit = req.query.limit ? parseInt(req.query.limit) : 0;
         const sort = req.query.sort === 'rating' ? { rating: -1 } : { releaseDate: -1 }; // Default sort by newest
 
-        console.log('MongoDB query:', JSON.stringify(query));
         const movies = await Movie.find(query).sort(sort).limit(limit);
-        console.log('Found movies:', movies.length);
         res.json(movies);
     } catch (error) {
         console.error('Error in getMovies:', error);
         res.status(500).json({ message: "Server Error" });
     }
 };
-
-// --- All other functions (getMovieById, addMovie, etc.) remain the same ---
 
 exports.getMovieById = async (req, res) => {
     try {
@@ -76,7 +91,7 @@ exports.addMovie = async (req, res) => {
 };
 
 exports.updateMovie = async (req, res) => {
-    const { title, description, genre, rating, image, cities, releaseDate } = req.body;
+    const { title, description, genre, rating, image, cities, releaseDate, cityStatus } = req.body;
     try {
         const movie = await Movie.findById(req.params.id);
         if (movie) {
@@ -87,6 +102,7 @@ exports.updateMovie = async (req, res) => {
             movie.image = image || movie.image;
             movie.cities = cities || movie.cities;
             movie.releaseDate = releaseDate || movie.releaseDate;
+            if (cityStatus) movie.cityStatus = cityStatus;
 
             const updatedMovie = await movie.save();
             res.json(updatedMovie);

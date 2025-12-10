@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ShowtimeSchema = new mongoose.Schema({
     date: { type: String, required: true },
     time: { type: String, required: true },
+    theater: { type: mongoose.Schema.Types.ObjectId, ref: 'Theater' },
     screen: { type: String, default: 'Screen 1' },
     totalSeats: { type: Number, default: 50 },
     availableSeats: { type: Number, default: 50 },
@@ -32,6 +33,12 @@ const MovieSchema = new mongoose.Schema({
     // cities: { type: [String], default: [] }, // Removed
     showtimes: [ShowtimeSchema],
     defaultPrice: { type: Number, default: 200 },
+
+    // City-specific status (Manual control)
+    cityStatus: [{
+        city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' },
+        status: { type: String, enum: ['now_showing', 'coming_soon'] }
+    }],
 
     // Additional metadata
     runtime: { type: Number }, // in minutes

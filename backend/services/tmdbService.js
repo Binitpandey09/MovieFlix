@@ -4,7 +4,8 @@ const https = require('https');
 
 const agent = new https.Agent({
     keepAlive: true,
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    family: 4 // Force IPv4
 });
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
@@ -14,13 +15,17 @@ const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Retry wrapper
-const fetchWithRetry = async (fn, retries = 3) => {
+const fetchWithRetry = async (fn, retries = 1) => { // Reduced retries to 1
     for (let i = 0; i < retries; i++) {
         try {
             return await fn();
         } catch (error) {
+            console.error(`❌ Request failed: ${error.message}`);
+            if (error.response) {
+                console.error(`Status: ${error.response.status}, Data: ${JSON.stringify(error.response.data)}`);
+            }
             if (i === retries - 1) throw error;
-            console.log(`⚠️ Request failed, retrying (${i + 1}/${retries})...`);
+            console.log(`⚠️ Retrying (${i + 1}/${retries})...`);
             await delay(1000 * (i + 1));
         }
     }
@@ -34,6 +39,7 @@ const fetchTMDBMovies = async (endpoint) => {
             params: {
                 api_key: TMDB_API_KEY,
                 language: 'en-US',
+                region: 'IN',
                 page: 1,
             },
             headers: {
@@ -41,7 +47,7 @@ const fetchTMDBMovies = async (endpoint) => {
                 'Accept': 'application/json',
                 'Connection': 'keep-alive'
             },
-            timeout: 60000, // 60s
+            timeout: 10000, // Reduced to 10s for faster feedback
             httpsAgent: agent,
             maxBodyLength: Infinity,
             maxContentLength: Infinity
@@ -89,18 +95,40 @@ const importTMDBMovies = async () => {
         const nowPlayingMovies = await fetchTMDBMovies('/movie/now_playing');
 
         // Combine and remove duplicates
-        const allMovies = [...upcomingMovies, ...nowPlayingMovies];
-        const uniqueMovies = allMovies.filter((movie, index, self) =>
-            index === self.findIndex((m) => m.id === movie.id)
-        ).slice(0, 5); // Limit to 5 movies per batch for maximum stability
+        // Interleave to get a mix of Now Playing and Upcoming
+        const allMovies = [];
+        const maxLength = Math.max(upcomingMovies.length, nowPlayingMovies.length);
+        for (let i = 0; i < maxLength; i++) {
+            if (i < nowPlayingMovies.length) allMovies.push(nowPlayingMovies[i]);
+            if (i < upcomingMovies.length) allMovies.push(upcomingMovies[i]);
+        }
 
-        console.log(`📥 Found ${uniqueMovies.length} unique movies from TMDB`);
+        let uniqueMovies = allMovies.filter((movie, index, self) =>
+            index === self.findIndex((m) => m.id === movie.id)
+        );
+
+        // Get list of existing TMDB IDs from database
+        const existingTmdbIds = await Movie.find({
+            tmdbId: { $in: uniqueMovies.map(m => m.id) }
+        }).distinct('tmdbId');
+
+        // Filter to keep only NEW movies (ensure type safety)
+        const newMovies = uniqueMovies.filter(m => !existingTmdbIds.some(id => String(id) === String(m.id)));
+
+        console.log(`📥 TMDB Fetch: ${uniqueMovies.length} total. Existing in DB: ${existingTmdbIds.length}. New available: ${newMovies.length}`);
+
+        // Select top 5 NEW movies to import
+        // If we have fewer than 5 new movies, we can fill the rest with existing ones to ensure we process 5 items (optional, but user wants imports)
+        // For now, let's strictly prioritize NEW movies.
+        const moviesToProcess = newMovies.slice(0, 5);
+
+        console.log(`Processing ${moviesToProcess.length} new movies...`);
 
         let imported = 0;
         let updated = 0;
         let skipped = 0;
 
-        for (const tmdbMovie of uniqueMovies) {
+        for (const tmdbMovie of moviesToProcess) {
             try {
                 // Add delay to avoid rate limiting
                 await delay(5000); // Increased delay to 5s

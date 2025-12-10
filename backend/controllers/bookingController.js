@@ -1,41 +1,50 @@
 const Booking = require('../models/Booking');
 const Movie = require('../models/Movie');
+const Theater = require('../models/Theater');
 
-exports.createBooking = async (req, res) => {
-    const { movieId, showtime, seats } = req.body;
+// @desc    Create a new booking
+// @route   POST /api/bookings
+// @access  Private
+const createBooking = async (req, res) => {
     try {
-        const movie = await Movie.findById(movieId);
-        if (!movie) return res.status(404).json({ message: 'Movie not found' });
+        const { movieId, showtime, seats, theaterId, quantity, totalAmount } = req.body;
 
-        const showtimeToUpdate = movie.showtimes.find(st => st.date === showtime.date && st.time === showtime.time);
-        if (!showtimeToUpdate) return res.status(404).json({ message: 'Showtime not found' });
-        
-        if (showtimeToUpdate.availableSeats < seats.length) {
-            return res.status(400).json({ message: 'Not enough seats available' });
+        if (!seats || seats.length === 0) {
+            return res.status(400).json({ message: 'No seats selected' });
         }
-        
-        showtimeToUpdate.availableSeats -= seats.length;
-        await movie.save();
 
         const booking = new Booking({
-            userId: req.user._id,
-            movieId,
+            user: req.user._id,
+            movie: movieId,
+            theater: theaterId,
             showtime,
             seats,
+            quantity,
+            totalAmount,
+            status: 'Confirmed' // Direct confirmation for now
         });
 
         const createdBooking = await booking.save();
         res.status(201).json(createdBooking);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        console.error("Create Booking Error:", error);
+        res.status(500).json({ message: 'Booking failed', error: error.message });
     }
 };
 
-exports.getMyBookings = async (req, res) => {
+// @desc    Get logged in user bookings
+// @route   GET /api/bookings/my
+// @access  Private
+const getMyBookings = async (req, res) => {
     try {
-        const bookings = await Booking.find({ userId: req.user._id }).populate('movieId', 'title image');
+        const bookings = await Booking.find({ user: req.user._id })
+            .populate('movie', 'title image')
+            .populate('theater', 'name location')
+            .sort({ createdAt: -1 });
         res.json(bookings);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({ message: 'Failed to fetch bookings' });
     }
 };
+
+module.exports = { createBooking, getMyBookings };

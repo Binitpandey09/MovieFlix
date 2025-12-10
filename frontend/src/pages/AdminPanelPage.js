@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import EditMovieModal from '../components/EditMovieModal';
 import ShowtimeManagerModal from '../components/ShowtimeManagerModal';
 import TMDBMovieManager from '../components/TMDBMovieManager';
+import CityTheaterManager from '../components/admin/CityTheaterManager';
+import CityMovieManager from '../components/admin/CityMovieManager';
 import './AdminPanelPage.css'; // Import the new CSS
 
 const AdminPanelPage = () => {
@@ -85,7 +87,8 @@ const AdminPanelPage = () => {
         };
 
         loadInitialData();
-    }, [navigate, userInfo, API_URL]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate, API_URL]);
 
     // --- Handlers ---
     const handleEditClick = (movie) => { setCurrentMovie(movie); setShowEditModal(true); };
@@ -245,6 +248,10 @@ const AdminPanelPage = () => {
                         </Form>
                     </div>
                 );
+            case 'cityTheaterManager':
+                return <CityTheaterManager />;
+            case 'cityMovieManager':
+                return <CityMovieManager />;
             case 'tmdbManager':
                 return <TMDBMovieManager />;
             case 'viewMovies':
@@ -293,7 +300,8 @@ const AdminPanelPage = () => {
                         <Nav.Link eventKey="tmdbManager">🎬 TMDB Manager</Nav.Link>
                         <Nav.Link eventKey="viewMovies">View Movies & Banners</Nav.Link>
                         <Nav.Link eventKey="addMovie">Add Movie</Nav.Link>
-                        {/* <Nav.Link eventKey="addCity">Add New City</Nav.Link> */}
+                        <Nav.Link eventKey="cityTheaterManager">🏙️ Manage Cities & Theaters</Nav.Link>
+                        <Nav.Link eventKey="cityMovieManager">📍 City Movie Manager</Nav.Link>
                         <Nav.Link eventKey="addBanner">Add Carousel Banner</Nav.Link>
                         <Nav.Link eventKey="manageCategories">Manage Categories</Nav.Link>
                     </Nav>

@@ -1,85 +1,122 @@
 .seat-selector-container {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-}
-.screen {
-    width: 80%;
-    margin: 0 auto 2rem auto;
     text-align: center;
-    background-color: #333;
-    color: white;
-    padding: 5px;
-    border-radius: 4px;
-    letter-spacing: 2px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
+
+.screen {
+    width: 60%;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, rgba(50, 150, 255, 0.2));
+    margin: 0 auto 40px;
+    border-bottom: 3px solid #ddd;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #999;
+    transform: perspective(300px) rotateX(-5deg);
+}
+
 .seat-map {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
+
 .seat-tier {
-    width: 100%;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 20px;
 }
+
 .tier-header {
-    text-align: center;
+    font-size: 0.8rem;
+    color: #888;
     margin-bottom: 15px;
-    font-weight: bold;
-    color: #6c757d;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 10px;
+    text-align: left;
+    padding-left: 20px;
 }
+
 .seat-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    gap: 15px;
 }
+
 .row-label {
-    width: 30px;
-    text-align: right;
-    margin-right: 20px;
-    color: #6c757d;
+    width: 20px;
+    font-weight: 600;
+    color: #999;
+    font-size: 0.9rem;
 }
+
 .seats {
     display: flex;
-    gap: 5px;
+    gap: 8px;
 }
+
 .seat {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #2db039;
+    /* Available Green */
+    border-radius: 2px;
+    font-size: 0.7rem;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    justify-content: center;
     cursor: pointer;
-    background-color: white;
-    user-select: none;
+    transition: all 0.2s;
+    color: #2db039;
 }
-.seat.available:hover {
-    background-color: #e9ecef;
+
+.seat:hover {
+    background-color: #2db039;
+    color: white;
 }
+
 .seat.selected {
-    background-color: #28a745;
+    background-color: #2db039;
     color: white;
-    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(45, 176, 57, 0.5);
 }
+
 .seat.booked {
-    background-color: #6c757d;
-    color: white;
-    border-color: #6c757d;
+    background-color: #eee;
+    border-color: #ddd;
+    color: #ccc;
     cursor: not-allowed;
 }
+
+.seat.locked {
+    background-color: #ffc107;
+    /* Yellow */
+    border-color: #ffb300;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* Legend */
 .seat-legend {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
-    gap: 20px;
+    gap: 30px;
+    margin-top: 40px;
+    font-size: 0.8rem;
+    color: #666;
 }
+
 .legend-item {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.legend-item .seat {
+    cursor: default;
 }

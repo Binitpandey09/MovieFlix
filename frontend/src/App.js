@@ -10,15 +10,48 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import ContactPage from './pages/ContactPage';
-// import BookingPage from './pages/BookingPage'; // Removed
+import AllMoviesPage from './pages/AllMoviesPage';
+import CityPage from './pages/CityPage';
+import BuyTicketsPage from './pages/BuyTicketsPage';
+import BookingPage from './pages/BookingPage';
 
-import AllMoviesPage from './pages/AllMoviesPage'; // 1. Import the new page
-import CityPage from './pages/CityPage'; // Import CityPage
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
 
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+    this.setState({ error, errorInfo });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Container className="mt-5">
+          <h2>Something went wrong.</h2>
+          <details style={{ whiteSpace: 'pre-wrap' }}>
+            {this.state.error && this.state.error.toString()}
+            <br />
+            {this.state.errorInfo && this.state.errorInfo.componentStack}
+          </details>
+        </Container>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function App() {
-  const [category] = useState('All'); // Removed setCategory as FilterBar is removed
-  const [categories, setCategories] = useState([]); // State for all categories
+  const [category] = useState('All');
+  const [categories, setCategories] = useState([]);
+
   const fetchAllCategories = async () => {
     try {
       const { data } = await axios.get('/api/categories');
@@ -27,33 +60,32 @@ function App() {
       console.error("Could not fetch categories", error);
     }
   };
+
   useEffect(() => {
     fetchAllCategories();
   }, []);
 
   return (
     <Router>
-      {/* 2. Add flexbox wrapper to make footer sticky */}
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Header />
-        {/* FilterBar removed - Home and Category dropdown hidden */}
-
-        {/* 3. Make main content area expand */}
         <main style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<HomePage category={category} />} />
-            <Route path="/movie/:id" element={<MovieDetailsPage />} />
-            <Route path="/contact" element={<Container className="my-4"><ContactPage /></Container>} />
-            <Route path="/login" element={<Container className="my-4"><LoginPage /></Container>} />
-            <Route path="/register" element={<Container className="my-4"><RegisterPage /></Container>} />
-            {/* Booking routes removed as per user request */}
-            <Route path="/movies" element={<AllMoviesPage />} /> {/* 2. Add the route */}
-            <Route path="/city/:cityName" element={<CityPage />} /> {/* City Page Route */}
-            <Route path="/admin" element={<AdminPanelPage categories={categories} fetchCategories={fetchAllCategories} />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<HomePage category={category} />} />
+              <Route path="/movie/:id" element={<MovieDetailsPage />} />
+              <Route path="/contact" element={<Container className="my-4"><ContactPage /></Container>} />
+              <Route path="/login" element={<Container className="my-4"><LoginPage /></Container>} />
+              <Route path="/register" element={<Container className="my-4"><RegisterPage /></Container>} />
+              <Route path="/movies" element={<AllMoviesPage />} />
+              <Route path="/city/:cityName" element={<CityPage />} />
+              <Route path="/buytickets/:movieId" element={<BuyTicketsPage />} />
+              <Route path="/booking/:movieId" element={<BookingPage />} />
+              <Route path="/admin" element={<AdminPanelPage categories={categories} fetchCategories={fetchAllCategories} />} />
+            </Routes>
+          </ErrorBoundary>
         </main>
-
-        <Footer /> {/* 4. Add the Footer component at the end */}
+        <Footer />
       </div>
     </Router>
   );

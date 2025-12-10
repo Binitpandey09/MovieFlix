@@ -25,8 +25,13 @@ const Header = ({ city, setCity, allCities }) => {
     };
 
     const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const queryCity = searchParams.get('city');
     const cityMatch = matchPath("/city/:cityName", location.pathname);
-    const currentCity = cityMatch ? cityMatch.params.cityName : "Select City";
+
+    // Order: 1. /city/:name, 2. ?city=Name, 3. Default
+    const isHome = location.pathname === '/';
+    const currentCity = isHome ? "Select City" : ((cityMatch ? cityMatch.params.cityName : null) || queryCity || "Select City");
 
     return (
         <header className="bms-header">

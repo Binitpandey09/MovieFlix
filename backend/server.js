@@ -18,6 +18,8 @@ const bannerRoutes = require('./routes/bannerRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const tmdbRoutes = require('./routes/tmdbRoutes');
+const theaterRoutes = require('./routes/theaterRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
@@ -60,7 +62,8 @@ app.get('/', (req, res) => {
       cities: "/api/cities",
       banners: "/api/banners",
       contact: "/api/contact",
-      categories: "/api/categories"
+      categories: "/api/categories",
+      theaters: "/api/theaters"
     }
   });
 });
@@ -74,6 +77,8 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/tmdb', tmdbRoutes);
+app.use('/api/theaters', theaterRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -104,10 +109,24 @@ if (process.env.ENABLE_CRON === 'true') {
   console.log('⏰ TMDB auto-import cron job scheduled (daily at 3 AM)');
 }
 
-// Start Server
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const http = require('http');
+const { Server } = require('socket.io');
+const socketHandler = require('./socketHandler');
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://movieflix-frontend.vercel.app"], // Add your frontend origins
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 
-module.exports = app;
+// Initialize Socket Handler
+socketHandler(io);
+
+// Start Server
+const PORT = process.env.PORT || 5001;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

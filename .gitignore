@@ -160,3 +160,5 @@ temp/
 
 # Runtime configuration
 .npmrc
+bullet_points_summary.md
+backend/scripts/
